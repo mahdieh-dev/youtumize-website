@@ -1,0 +1,92 @@
+.pricing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.h2 {
+    color: white;
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+.plan {
+  width: 30%;
+  background-color: #fff;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.plan h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+  font-size: 20px;
+}
+
+.plan p {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.plan ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.plan li {
+  margin-bottom: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #3f51b5;
+}
+
+.title {
+  margin-bottom: 50px;
+  font-size: 30px;
+  text-align: center;
+  color: #3f51b5;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 767px) {
+  .plan {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .plan h3 {
+    font-size: 16px;
+  }
+
+  .plan p {
+    font-size: 18px;
+  }
+}
