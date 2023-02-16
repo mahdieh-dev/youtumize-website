@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.header {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroImage {
+  width: 50%;
+  height: auto;
+  margin-right: 50px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.actionButton {
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: #333;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.secondary {
+  background-color: transparent;
+  border: 2px solid #333;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    margin-bottom: 0px;
+  }
+
+  .heroImage {
+    width: 80%;
+    margin-right: 0;
+  }
+
+  .main {
+    flex-direction: column;
+  }
+}

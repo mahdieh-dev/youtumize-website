@@ -1,7 +1,10 @@
 import "./styles.css";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { UserProvider } from "../providers/UserProvider";
+import { CookiesProvider } from "react-cookie";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB6mY67s4PDsiY5VCENEnjOKvdwQQ9sdiw",
@@ -14,10 +17,18 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const analytics = isSupported().then((yes) => (yes ? getAnalytics(app) : null));
+export const db = getFirestore(app);
 
 function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <CookiesProvider>
+      <UserProvider>
+        {" "}
+        <Component {...pageProps} />
+      </UserProvider>
+    </CookiesProvider>
+  );
 }
 
 export { analytics };

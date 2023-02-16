@@ -1,39 +1,57 @@
 import Image from "next/image";
-import { useState } from "react";
-import buildspaceLogo from "../assets/buildspace-logo.png";
-import youtubeLogo from "../assets/youtube.png";
-import { ChainId, ConnectWallet, ThirdwebProvider } from "@thirdweb-dev/react";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import Pricing from "./Pricing";
-import Features from "./Features";
-import Header from "./Header";
-import Contacts from "./Contacts";
-import Home from "./Home";
+import { useRouter } from "next/router";
+import React, { useCallback, useContext } from "react";
+import { cow, superheroUni, superheroYr } from "../assets";
+import Header from "../components/header/Header";
+import useAuthentication from "../hooks/useAuthentication";
+import { UserContext } from "../providers/UserProvider";
+import styles from "./index.module.css";
 
 const App = () => {
-  const [menuState, setMenuState] = useState(1);
+  const router = useRouter();
+  const { user } = useContext(UserContext);
+  const { login } = useAuthentication();
 
+  const handleGetStartedClick = useCallback(() => {
+    if (!!!user) {
+      login(() => router.push("/home"));
+    } else {
+      router.push("/home");
+    }
+  }, [user, login, router]);
   return (
-    <ThirdwebProvider desiredChainId={ChainId.Mainnet}>
-      <PayPalScriptProvider
-        options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}
-      >
-        <Header onMenuStateChange={(state) => setMenuState(state)} />
-        <div className="root">
-          {/* <div className="navbar">
-            <Image src={youtubeLogo} className="logo" /> */}
-
-          {/* <div className="connect-wallet-wrapper">
-              <ConnectWallet />
-            </div>
-          </div> */}
-          {menuState === 1 && <Home />}
-          {menuState === 2 && <Features />}
-          {menuState === 3 && <Pricing />}
-          {menuState === 4 && <Contacts />}
+    <div>
+      <Header />
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>
+            Generate SEO-optimized Youtube Content
+          </h1>
+          <p className={styles.subtitle}>
+            Input your content ideas and let us do the rest!
+          </p>
         </div>
-      </PayPalScriptProvider>
-    </ThirdwebProvider>
+        <div className={styles.main}>
+          <Image src={cow} alt="Hero" className={styles.heroImage} />
+          <div className={styles.actions}>
+            <button
+              onClick={handleGetStartedClick}
+              className={`${styles.actionButton} ${styles.primary}`}
+            >
+              Get Started
+            </button>
+            <button
+              className={`${styles.actionButton} ${styles.secondary}`}
+              onClick={() => {
+                router.push("/features");
+              }}
+            >
+              Learn More
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
