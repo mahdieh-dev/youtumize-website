@@ -6,6 +6,7 @@ const Contacts = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [notification, setNotification] = useState("");
 
   const handleSubmit = useCallback(
     async (e) => {
@@ -23,6 +24,12 @@ const Contacts = () => {
         const data = await response.json();
         if (data?.message && data.message === "Success") {
           console.log("Email sent successfully");
+          setNotification(
+            "Thank you! We received your message! We will get back to you soon."
+          );
+          setEmail("");
+          setName("");
+          setMessage("");
         }
       } catch (error) {
         console.log("error when calling email API: ", error);
@@ -35,6 +42,11 @@ const Contacts = () => {
       <Header />
       <div>
         <h2 className={styles.h2}>Contact Us</h2>
+        {notification.length > 0 ? (
+          <p className={styles.notification}>{notification}</p>
+        ) : (
+          <></>
+        )}
         <form className={styles.form}>
           <label className={styles.label} htmlFor="name">
             Name:
@@ -45,6 +57,7 @@ const Contacts = () => {
             id="name"
             name="name"
             required
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
@@ -57,6 +70,7 @@ const Contacts = () => {
             id="email"
             name="email"
             required
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -68,6 +82,7 @@ const Contacts = () => {
             id="message"
             name="message"
             required
+            value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
 
