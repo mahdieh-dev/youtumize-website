@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styles from "./contacts.module.css";
 import Header from "../../components/header/Header";
 
 const Contacts = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      try {
+        e.preventDefault();
+
+        const response = await fetch("/api/email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, message }),
+        });
+
+        const data = await response.json();
+        if (data?.message && data.message === "Success") {
+          console.log("Email sent successfully");
+        }
+      } catch (error) {
+        console.log("error when calling email API: ", error);
+      }
+    },
+    [name, email, message]
+  );
   return (
     <div>
       <Header />
@@ -18,6 +45,7 @@ const Contacts = () => {
             id="name"
             name="name"
             required
+            onChange={(e) => setName(e.target.value)}
           />
 
           <label className={styles.label} htmlFor="email">
@@ -29,6 +57,7 @@ const Contacts = () => {
             id="email"
             name="email"
             required
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <label className={styles.label} htmlFor="message">
@@ -39,9 +68,14 @@ const Contacts = () => {
             id="message"
             name="message"
             required
+            onChange={(e) => setMessage(e.target.value)}
           ></textarea>
 
-          <button className={styles.button} type="submit">
+          <button
+            className={styles.button}
+            type="submit"
+            onClick={handleSubmit}
+          >
             Submit
           </button>
         </form>
