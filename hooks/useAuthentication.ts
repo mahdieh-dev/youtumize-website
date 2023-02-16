@@ -32,19 +32,18 @@ const useAuthentication = () => {
       user?: User
     ) => {
       try {
-        if (!!!user || !!!userInfo?.user) {
+        if (!!!user && !!!userInfo?.user) {
           return;
         }
         const uid = user?.uid ?? userInfo?.user?.uid;
-        console.log("uid: ", uid);
         const collectionRef = collection(db, collectionName);
         const docRef = doc(collectionRef, uid);
-        await setDoc(docRef, data);
+        await setDoc(docRef, data, { merge: true });
       } catch (error) {
         console.log("error when setting data to database:", error);
       }
     },
-    [doc, db, setDoc, userInfo, addDoc, getDoc]
+    [doc, db, setDoc, userInfo, addDoc]
   );
 
   const getFromDatabase = useCallback(
@@ -56,13 +55,15 @@ const useAuthentication = () => {
         const docRef = doc(db, collectionName, userInfo.user.uid);
         const data = await getDoc(docRef);
         if (data.exists()) {
-          console.log("got the doc data:", data.data());
+          // console.log("got the doc data:", data.data());
           setDocData(data.data());
+          return data.data();
         } else {
           console.log(
             "No such document exists, collectionName: ",
             collectionName
           );
+          return undefined;
         }
       } catch (error) {
         console.log("error when getting ddata from database:", error);
@@ -72,50 +73,52 @@ const useAuthentication = () => {
   );
 
   const login = useCallback(
-    (cb) => {
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          if (!credential) {
-            return;
-          }
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          console.log("user info: ", { token, user });
-          if (!user) {
-            return;
-          }
-          setCookie("user", JSON.stringify({ token, user }), {
-            maxAge: 48 * 3600,
-            sameSite: true,
-          });
-          updateUser({ token, user });
-          await setToDatabase(
-            ECollection.USERS,
-            {
-              info: user,
-            },
-            user
-          );
-          cb?.();
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          console.log("error when logging in with google: ", {
-            errorCode,
-            errorMessage,
-            email,
-            credential,
-          });
+    async (cb) => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        if (!!!result) {
+          return;
+        }
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (!!!credential) {
+          return;
+        }
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log("user info: ", { token, user: JSON.stringify(user) });
+        if (!!!user) {
+          return;
+        }
+        setCookie("user", JSON.stringify({ token, user }), {
+          maxAge: 48 * 3600,
+          sameSite: true,
         });
+        updateUser({ token, user });
+        await setToDatabase(
+          ECollection.USERS,
+          {
+            info: JSON.stringify(user),
+          },
+          user
+        );
+        cb?.();
+      } catch (error) {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log("error when logging in with google: ", {
+          errorCode,
+          errorMessage,
+          email,
+          credential,
+        });
+      }
     },
     [signInWithPopup, setCookie, updateUser, setToDatabase]
   );
@@ -133,7 +136,7 @@ const useAuthentication = () => {
       });
   }, [auth, removeCookie, clearUser, signOut]);
 
-  return { login, logout, setToDatabase, getFromDatabase };
+  return { login, logout, setToDatabase, getFromDatabase, docData };
 };
 
 export default useAuthentication;
