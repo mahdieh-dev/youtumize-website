@@ -8,7 +8,8 @@ export const UserContext = createContext({
 });
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  // toFix: fix the type later
+  const [user, setUser] = useState<any>();
   const [cookies, setCookie] = useCookies(["user"]);
 
   useEffect(() => {
