@@ -64,16 +64,14 @@ const Home = () => {
                 }
                 const splitted = el.split(":");
                 return (
-                  <>
-                    <p key={ind} className={styles.textBold}>
-                      {splitted[0] + ":"}
-                    </p>
-                    <p key={ind} className={styles.text}>
+                  <div key={`${el}-${ind}`}>
+                    <p className={styles.textBold}>{splitted[0] + ":"}</p>
+                    <p className={styles.text}>
                       {splitted.length > 2
                         ? splitted.slice(1).join(":")
                         : splitted[1]}
                     </p>
-                  </>
+                  </div>
                 );
               })}
             </div>
