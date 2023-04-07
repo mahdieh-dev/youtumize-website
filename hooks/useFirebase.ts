@@ -20,6 +20,7 @@ const useFirebase = () => {
   const { updateUser, clearUser, user: userInfo } = useContext(UserContext);
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [docData, setDocData] = useState(undefined);
+  const [loading, setLoading] = useState(false);
 
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
@@ -35,11 +36,14 @@ const useFirebase = () => {
         if (!!!user && !!!userInfo?.user) {
           return;
         }
+        setLoading(true);
         const uid = user?.uid ?? userInfo?.user?.uid;
         const collectionRef = collection(db, collectionName);
         const docRef = doc(collectionRef, uid);
         await setDoc(docRef, data, { merge: true });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.log("error when setting data to database:", error);
       }
     },
@@ -52,20 +56,24 @@ const useFirebase = () => {
         if (!!!userInfo?.user) {
           return;
         }
+        setLoading(true);
         const docRef = doc(db, collectionName, userInfo.user.uid);
         const data = await getDoc(docRef);
         if (data.exists()) {
           // console.log("got the doc data:", data.data());
           setDocData(data.data());
+          setLoading(false);
           return data.data();
         } else {
           console.log(
             "No such document exists, collectionName: ",
             collectionName
           );
+          setLoading(false);
           return undefined;
         }
       } catch (error) {
+        setLoading(false);
         console.log("error when getting ddata from database:", error);
       }
     },
@@ -136,7 +144,7 @@ const useFirebase = () => {
       });
   }, [auth, removeCookie, clearUser, signOut]);
 
-  return { login, logout, setToDatabase, getFromDatabase, docData };
+  return { login, logout, setToDatabase, getFromDatabase, docData, loading };
 };
 
 export default useFirebase;

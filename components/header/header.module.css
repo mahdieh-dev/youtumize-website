@@ -109,10 +109,10 @@
 
   .menuIcon {
     position: absolute;
-    right: 32px;
+    right: 70px;
     display: block;
-    width: 2.5em;
-    height: 2.5em;
+    width: 2em;
+    height: 2em;
     cursor: pointer;
   }
   .menuIcon:hover span {
@@ -129,7 +129,7 @@
     display: block;
     width: 100%;
     height: 0.25em;
-    background-color: #fff;
+    background-color: #000;
     border-radius: 3px;
     transition: transform 0.3s, background 0.25s ease;
   }
@@ -138,9 +138,9 @@
   .menuIcon > span:after {
     content: "";
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
+    width: 50%;
+    height: 50%;
+    background-color: #000;
     border-radius: 3px;
     transition: transform 0.3s, background 0.25s ease;
   }
@@ -196,11 +196,21 @@
     text-align: center;
   }
 
-  .welcomeWrapper {
+  .welcome {
     display: none;
   }
 
   .logoWrapper {
     margin-right: 50%;
+  }
+
+  .profileIcon {
+    position: absolute;
+    right: 16px;
+    top: 25px;
+  }
+
+  .profileMenu {
+    top: 70px;
   }
 }
