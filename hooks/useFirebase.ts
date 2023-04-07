@@ -16,7 +16,7 @@ export enum ECollection {
   USERS = "users",
 }
 
-const useAuthentication = () => {
+const useFirebase = () => {
   const { updateUser, clearUser, user: userInfo } = useContext(UserContext);
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [docData, setDocData] = useState(undefined);
@@ -139,4 +139,4 @@ const useAuthentication = () => {
   return { login, logout, setToDatabase, getFromDatabase, docData };
 };
 
-export default useAuthentication;
+export default useFirebase;

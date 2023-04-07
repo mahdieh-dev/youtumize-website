@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import useAuthentication, { ECollection } from "./useAuthentication";
+import useFirebase, { ECollection } from "./useFirebase";
 
 const useGenerate = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
-  const { setToDatabase, getFromDatabase } = useAuthentication();
+  const { setToDatabase, getFromDatabase } = useFirebase();
 
   const generate = useCallback(
     async (userInput: string) => {

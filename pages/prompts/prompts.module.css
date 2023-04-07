@@ -1,0 +1,99 @@
+.h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 3rem;
+  color: white;
+}
+
+.ul {
+  list-style: none;
+  padding: 0 16px;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.li {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.li::before {
+  color: #4caf50;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  display: inline-block;
+}
+
+.emptyWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emptyImageWrap {
+  display: flex;
+  align-items: center;
+}
+
+.emptyPromptsImage {
+  width: 300px;
+  height: auto;
+}
+
+.emptyText {
+  color: #fff;
+  max-width: 350px;
+  font-size: 30px;
+  margin-left: 32px;
+  font-weight: bold;
+}
+
+.goHomeButton {
+  background-color: #3f51b5;
+  color: #ffffff;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: 0.2s;
+  width: 100px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 0px 0px 40px 0px;
+}
+
+.goHomeButton:hover {
+  background-color: #303f9f;
+}
+
+@media (max-width: 768px) {
+  .h2 {
+    font-size: 2rem;
+  }
+
+  .li {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .emptyImageWrap {
+    flex-direction: column;
+  }
+
+  .emptyPromptsImage {
+    width: 250px;
+  }
+
+  .emptyText {
+    text-align: center;
+  }
+}

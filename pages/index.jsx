@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext } from "react";
-import { cow, superheroUni, superheroYr } from "../assets";
+import { cow } from "../assets";
 import Header from "../components/header/Header";
-import useAuthentication from "../hooks/useAuthentication";
+import useFirebase from "../hooks/useFirebase";
 import { UserContext } from "../providers/UserProvider";
 import styles from "./index.module.css";
 
 const App = () => {
   const router = useRouter();
   const { user } = useContext(UserContext);
-  const { login } = useAuthentication();
+  const { login } = useFirebase();
 
   const handleGetStartedClick = useCallback(() => {
     if (!!!user) {

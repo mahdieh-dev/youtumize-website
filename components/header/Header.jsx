@@ -2,14 +2,16 @@ import { useRouter } from "next/router";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import styles from "./header.module.css";
 import { UserContext } from "../../providers/UserProvider";
-import useAuthentication from "../../hooks/useAuthentication";
+import useFirebase from "../../hooks/useFirebase";
 import Logo from "../logo";
+import { BsPersonCircle } from "react-icons/bs";
 
 const Header = () => {
   const router = useRouter();
   const { user } = useContext(UserContext);
-  const { login, logout } = useAuthentication();
+  const { login, logout } = useFirebase();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const handleMenuItemClick = useCallback(
     (label) => () => {
@@ -38,12 +40,30 @@ const Header = () => {
   }, [isMenuOpen]);
 
   const handleStartButtonClick = useCallback(() => {
-    if (!!user) {
-      logout();
-    } else {
-      login();
-    }
-  }, [login, logout]);
+    login();
+  }, [login]);
+
+  const handleProfileIconClick = useCallback(() => {
+    setIsProfileMenuOpen((prev) => !prev);
+  }, []);
+
+  const navigate = useCallback(
+    (routeName) => {
+      if (router.route === `/${routeName}`) {
+        setIsProfileMenuOpen(false);
+      }
+      router.push(routeName.toLowerCase());
+    },
+    [router]
+  );
+
+  const profileMenuOptions = useMemo(
+    () => [
+      { title: "Your prompts", action: () => navigate("prompts") },
+      { title: "Logout", action: logout },
+    ],
+    [logout, navigate]
+  );
 
   return (
     <header className={styles.header}>
@@ -79,10 +99,34 @@ const Header = () => {
         ) : (
           <></>
         )}
-        <button className={styles.ctaButton} onClick={handleStartButtonClick}>
-          {!!user ? "Logout" : "Get Started"}
-        </button>
+        {!!!user ? (
+          <button className={styles.ctaButton} onClick={handleStartButtonClick}>
+            {"Get Started"}
+          </button>
+        ) : (
+          <BsPersonCircle
+            onClick={handleProfileIconClick}
+            size={25}
+            className={styles.profileIcon}
+          />
+        )}
       </div>
+      {isProfileMenuOpen && (
+        <div className={styles.profileMenu}>
+          {profileMenuOptions.map((el, ind) => {
+            return (
+              <div
+                className={styles.profileMenuOption}
+                key={`${el}-${ind}`}
+                onClick={el.action}
+                style={{ color: el.title === "Logout" ? "red" : "black" }}
+              >
+                {el.title}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 };

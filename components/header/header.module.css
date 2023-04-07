@@ -72,6 +72,25 @@
   margin-right: 32px;
 }
 
+.profileIcon {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.profileMenu {
+  position: absolute;
+  top: 80px;
+  right: 16px;
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px 16px;
+}
+
+.profileMenuOption {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .header {
     flex-direction: column;

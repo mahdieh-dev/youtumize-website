@@ -15,7 +15,7 @@ Video content:
 const generateAction = async (req, res) => {
   try {
     // Run first prompt
-    console.log(`API: ${zeroPromptPrefix}${req.body.userInput}`);
+    // console.log(`API: ${zeroPromptPrefix}${req.body.userInput}`);
 
     const zeroCompletion = await openai.createCompletion({
       model: "text-davinci-003",
