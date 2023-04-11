@@ -18,7 +18,7 @@ const Home = () => {
   }, []);
 
   const onUserChangedText = useCallback((event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setUserInput(event.target.value);
   }, []);
 

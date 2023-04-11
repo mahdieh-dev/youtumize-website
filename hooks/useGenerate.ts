@@ -10,7 +10,7 @@ const useGenerate = () => {
     async (userInput: string) => {
       setIsGenerating(true);
 
-      console.log("Calling OpenAI...");
+      // console.log("Calling OpenAI...");
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {

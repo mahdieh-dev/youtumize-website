@@ -40,8 +40,8 @@ const Header = () => {
   }, [isMenuOpen]);
 
   const handleStartButtonClick = useCallback(() => {
-    login();
-  }, [login]);
+    login(() => router.push("/home"));
+  }, [login, router]);
 
   const handleProfileIconClick = useCallback(() => {
     setIsProfileMenuOpen((prev) => !prev);
@@ -49,20 +49,28 @@ const Header = () => {
 
   const navigate = useCallback(
     (routeName) => {
-      if (router.route === `/${routeName}`) {
-        setIsProfileMenuOpen(false);
-      }
       router.push(routeName.toLowerCase());
     },
     [router]
   );
 
+  const handleProfileMenuItemClick = useCallback((cb) => {
+    setIsProfileMenuOpen(false);
+    cb?.();
+  }, []);
+
   const profileMenuOptions = useMemo(
     () => [
-      { title: "Your prompts", action: () => navigate("prompts") },
-      { title: "Logout", action: logout },
+      {
+        title: "Your prompts",
+        action: () => handleProfileMenuItemClick(() => navigate("prompts")),
+      },
+      {
+        title: "Logout",
+        action: () => handleProfileMenuItemClick(logout),
+      },
     ],
-    [logout, navigate]
+    [logout, navigate, handleProfileMenuItemClick]
   );
 
   return (

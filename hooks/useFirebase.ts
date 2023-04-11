@@ -105,7 +105,7 @@ const useFirebase = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log("user info: ", { token, user: JSON.stringify(user) });
+        // console.log("user info: ", { token, user: JSON.stringify(user) });
         if (!!!user) {
           return;
         }
