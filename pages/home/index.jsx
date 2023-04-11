@@ -4,18 +4,18 @@ import Header from "../../components/header/Header";
 import { UserContext } from "../../providers/UserProvider";
 import styles from "./home.module.css";
 import useGenerate from "../../hooks/useGenerate";
+import useAuthentication from "../../hooks/useAuthentication";
 
 const Home = () => {
   const { user } = useContext(UserContext);
   const router = useRouter();
   const [userInput, setUserInput] = useState("");
   const { generate, isGenerating, generatedContent } = useGenerate();
+  const { checkIsLoggedIn } = useAuthentication();
 
   useEffect(() => {
-    if (!!!user) {
-      router.push("/");
-    }
-  }, [user]);
+    checkIsLoggedIn();
+  }, []);
 
   const onUserChangedText = useCallback((event) => {
     console.log(event.target.value);

@@ -23,11 +23,12 @@ const useGenerate = () => {
       const { output } = data;
       // console.log("OpenAI replied...", output.text);
       const docData = await getFromDatabase(ECollection.PROMPTS);
-      if (!!docData) {
-        let docPrompt = docData.prompts ?? [];
-        docPrompt.push(userInput);
-        await setToDatabase(ECollection.PROMPTS, { prompts: docPrompt });
-      }
+      let docPrompt = docData?.prompts ?? [];
+      docPrompt.push({ prompt: userInput, output: output.text });
+      await setToDatabase(ECollection.PROMPTS, {
+        prompts: docPrompt,
+      });
+
       setGeneratedContent(`${output.text}`);
       setIsGenerating(false);
     },

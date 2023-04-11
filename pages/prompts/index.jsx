@@ -3,26 +3,33 @@ import styles from "./prompts.module.css";
 import Header from "../../components/header/Header";
 import { useEffect } from "react";
 import useFirebase, { ECollection } from "../../hooks/useFirebase";
+import useAuthentication from "../../hooks/useAuthentication";
 import { useCallback } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import { emptyPrompts } from "../../assets";
 import { useRouter } from "next/router";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 const Prompts = () => {
   const { getFromDatabase, loading } = useFirebase();
   const [promptsArray, setPromptsArray] = useState([]);
+  const [selectedPrompt, setSelectedPrompt] = useState(undefined);
   const router = useRouter();
+  const { checkIsLoggedIn } = useAuthentication();
 
   const getPrompts = useCallback(async () => {
     const data = await getFromDatabase(ECollection.PROMPTS);
     if (!data) {
       return;
     }
-    setPromptsArray(data.prompts);
-  });
+    setPromptsArray(data.prompts ?? []);
+  }, [getFromDatabase]);
+
   useEffect(() => {
-    getPrompts();
+    if (checkIsLoggedIn()) {
+      getPrompts();
+    }
   }, []);
 
   const handleGoHomeclick = useCallback(() => {
@@ -39,14 +46,39 @@ const Prompts = () => {
             : "No Prompts Yet!"}
         </h2>
         <ul className={styles.ul}>
-          {promptsArray.length > 0 ? (
+          {promptsArray.length ? (
             promptsArray.map((el, ind) => {
               return (
-                <li key={ind} className={styles.li}>
-                  {el}
-                </li>
+                <div className={styles.promptWrapper} key={ind}>
+                  <li
+                    key={ind}
+                    onClick={() =>
+                      setSelectedPrompt((prev) =>
+                        prev === undefined ? ind : undefined
+                      )
+                    }
+                    className={`${styles.li} ${
+                      selectedPrompt === ind ? styles.selected : ""
+                    }`}
+                  >
+                    {selectedPrompt === ind ? (
+                      <RiArrowUpSLine size={24} className={styles.arrowIcon} />
+                    ) : (
+                      <RiArrowDownSLine
+                        size={24}
+                        className={styles.arrowIcon}
+                      />
+                    )}
+                    {el.prompt}
+                  </li>
+                  {selectedPrompt === ind && el.output ? (
+                    <p className={styles.outputText}>{el.output}</p>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               );
-            }, [])
+            })
           ) : (
             <></>
           )}

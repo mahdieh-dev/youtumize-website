@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   getAuth,
   signInWithPopup,
@@ -10,6 +10,7 @@ import { UserContext } from "../providers/UserProvider";
 import { useCookies } from "react-cookie";
 import { db } from "../pages/_app";
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 export enum ECollection {
   PROMPTS = "prompts",
@@ -21,6 +22,7 @@ const useFirebase = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [docData, setDocData] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
@@ -33,14 +35,18 @@ const useFirebase = () => {
       user?: User
     ) => {
       try {
-        if (!!!user && !!!userInfo?.user) {
-          return;
+        let userData = user || userInfo?.user;
+        if (!!!userData) {
+          userData = cookies["user"]?.user;
+          if (!!!userData) {
+            return;
+          }
         }
         setLoading(true);
-        const uid = user?.uid ?? userInfo?.user?.uid;
+        const uid = userData.uid;
         const collectionRef = collection(db, collectionName);
         const docRef = doc(collectionRef, uid);
-        await setDoc(docRef, data, { merge: true });
+        await setDoc(docRef, data);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -53,11 +59,15 @@ const useFirebase = () => {
   const getFromDatabase = useCallback(
     async (collectionName: ECollection) => {
       try {
-        if (!!!userInfo?.user) {
-          return;
+        let userData = userInfo?.user;
+        if (!!!userData) {
+          userData = cookies["user"]?.user;
+          if (!!!userData) {
+            return;
+          }
         }
         setLoading(true);
-        const docRef = doc(db, collectionName, userInfo.user.uid);
+        const docRef = doc(db, collectionName, userData.uid);
         const data = await getDoc(docRef);
         if (data.exists()) {
           // console.log("got the doc data:", data.data());
@@ -74,7 +84,7 @@ const useFirebase = () => {
         }
       } catch (error) {
         setLoading(false);
-        console.log("error when getting ddata from database:", error);
+        console.log("error when getting data from database:", error);
       }
     },
     [doc, db, userInfo]
@@ -137,12 +147,13 @@ const useFirebase = () => {
         // Sign-out successful.
         removeCookie("user", { path: "/" });
         clearUser();
+        router.push("/");
       })
       .catch((error) => {
         console.log("error when signing out the user: ", error);
         // An error happened.
       });
-  }, [auth, removeCookie, clearUser, signOut]);
+  }, [auth, removeCookie, clearUser, signOut, router]);
 
   return { login, logout, setToDatabase, getFromDatabase, docData, loading };
 };
